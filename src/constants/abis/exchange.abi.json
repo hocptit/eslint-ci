@@ -1,0 +1,513 @@
+[
+    {
+        "inputs": [
+            {
+                "components": [
+                    { "internalType": "address", "name": "FirstReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "FirstPercentage", "type": "uint256" },
+                    { "internalType": "address", "name": "SecondReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "SecondPercentage", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.MarketFees",
+                "name": "_marketFees",
+                "type": "tuple"
+            },
+            { "internalType": "address", "name": "_rootAdmin", "type": "address" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "tokenContract", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "auctioner", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "heighestBid", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "heighestBidder", "type": "address" }
+        ],
+        "name": "AuctionCancelled",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "nftAddress", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "auctioner", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "basePrice", "type": "uint256" },
+            { "indexed": false, "internalType": "uint256", "name": "salePrice", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" }
+        ],
+        "name": "AuctionCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "tokenContract", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "auctioner", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "heighestBidder", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" },
+            { "indexed": false, "internalType": "uint256", "name": "heighestBid", "type": "uint256" }
+        ],
+        "name": "AuctionSettled",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "tokenContract", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "auctioner", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "bidder", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" },
+            { "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" }
+        ],
+        "name": "BidPlaced",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+        ],
+        "name": "FundReceived",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "components": [
+                    { "internalType": "address", "name": "receiver", "type": "address" },
+                    { "internalType": "uint256", "name": "percentageValue", "type": "uint256" }
+                ],
+                "indexed": false,
+                "internalType": "struct DeLoreanMarketplace.Fee",
+                "name": "sellerProfit",
+                "type": "tuple"
+            },
+            {
+                "components": [
+                    { "internalType": "address", "name": "FirstReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "FirstPercentage", "type": "uint256" },
+                    { "internalType": "address", "name": "SecondReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "SecondPercentage", "type": "uint256" }
+                ],
+                "indexed": false,
+                "internalType": "struct DeLoreanMarketplace.MarketFees",
+                "name": "marketFees",
+                "type": "tuple"
+            }
+        ],
+        "name": "FundTransfer",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "tokenContract", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "buyer", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "seller", "type": "address" }
+        ],
+        "name": "NFTTransfer",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "nftAddress", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "seller", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" }
+        ],
+        "name": "NftListed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": true, "internalType": "address", "name": "nftAddress", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "seller", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "erc20Token", "type": "address" },
+            { "indexed": false, "internalType": "address", "name": "buyer", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" }
+        ],
+        "name": "NftSold",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "address", "name": "buyer", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" }
+        ],
+        "name": "RefundAuction",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32" },
+            { "indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32" }
+        ],
+        "name": "RoleAdminChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+        ],
+        "name": "RoleGranted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+            { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+        ],
+        "name": "RoleRevoked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "indexed": false, "internalType": "address", "name": "sellerOrAdmin", "type": "address" }
+        ],
+        "name": "SaleCanceled",
+        "type": "event"
+    },
+    { "stateMutability": "payable", "type": "fallback" },
+    {
+        "inputs": [],
+        "name": "ADMIN_ROLE",
+        "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_sellerAddress", "type": "address" },
+            { "internalType": "address", "name": "_buyer", "type": "address" },
+            { "internalType": "uint256", "name": "_saleType", "type": "uint256" }
+        ],
+        "name": "BuyNFT",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "DEFAULT_ADMIN_ROLE",
+        "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "uint256", "name": "_price", "type": "uint256" },
+            { "internalType": "address", "name": "_erc20Token", "type": "address" },
+            { "internalType": "address", "name": "_seller", "type": "address" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" }
+        ],
+        "name": "SellNFT",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    { "internalType": "address", "name": "FirstReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "FirstPercentage", "type": "uint256" },
+                    { "internalType": "address", "name": "SecondReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "SecondPercentage", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.MarketFees",
+                "name": "_marketFees",
+                "type": "tuple"
+            }
+        ],
+        "name": "SetMarketFees",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    { "internalType": "address", "name": "FirstReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "FirstPercentage", "type": "uint256" },
+                    { "internalType": "address", "name": "SecondReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "SecondPercentage", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.Royalties",
+                "name": "_royalties",
+                "type": "tuple"
+            },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" }
+        ],
+        "name": "SetRoyalty",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_auctioner", "type": "address" }
+        ],
+        "name": "cancelAuction",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_sellerAddress", "type": "address" }
+        ],
+        "name": "cancelListing",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "uint256", "name": "_basePrice", "type": "uint256" },
+            { "internalType": "uint256", "name": "_salePrice", "type": "uint256" },
+            { "internalType": "address", "name": "_erc20Token", "type": "address" },
+            { "internalType": "address", "name": "_auctioner", "type": "address" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" }
+        ],
+        "name": "createAuction",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_auctioner", "type": "address" }
+        ],
+        "name": "getAuction",
+        "outputs": [
+            {
+                "components": [
+                    { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+                    { "internalType": "uint256", "name": "basePrice", "type": "uint256" },
+                    { "internalType": "uint256", "name": "salePrice", "type": "uint256" },
+                    { "internalType": "address", "name": "erc20Token", "type": "address" },
+                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                    { "internalType": "address", "name": "auctioner", "type": "address" },
+                    { "internalType": "address", "name": "currentBidder", "type": "address" },
+                    { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+                    { "internalType": "uint256", "name": "basePriceWithoutFees", "type": "uint256" },
+                    { "internalType": "uint256", "name": "salePriceWithoutFees", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.Auction",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "address", "name": "_bidderAddress", "type": "address" }],
+        "name": "getBidderInEscrowBalance",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "address", "name": "_nftContractAddress", "type": "address" }],
+        "name": "getInAuctionTokensIds",
+        "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "address", "name": "_nftContractAddress", "type": "address" }],
+        "name": "getInSaleTokensIds",
+        "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getMarketFeePercentage",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "bytes32", "name": "role", "type": "bytes32" }],
+        "name": "getRoleAdmin",
+        "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "uint256", "name": "index", "type": "uint256" }
+        ],
+        "name": "getRoleMember",
+        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "bytes32", "name": "role", "type": "bytes32" }],
+        "name": "getRoleMemberCount",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "address", "name": "_nftContractAddress", "type": "address" }],
+        "name": "getRoyaltyInfo",
+        "outputs": [
+            {
+                "components": [
+                    { "internalType": "address", "name": "FirstReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "FirstPercentage", "type": "uint256" },
+                    { "internalType": "address", "name": "SecondReceiver", "type": "address" },
+                    { "internalType": "uint256", "name": "SecondPercentage", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.Royalties",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_sellerAddress", "type": "address" }
+        ],
+        "name": "getSale",
+        "outputs": [
+            {
+                "components": [
+                    { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+                    { "internalType": "uint256", "name": "price", "type": "uint256" },
+                    { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+                    { "internalType": "address", "name": "erc20Token", "type": "address" },
+                    { "internalType": "address", "name": "seller", "type": "address" },
+                    { "internalType": "uint256", "name": "priceWithoutFees", "type": "uint256" }
+                ],
+                "internalType": "struct DeLoreanMarketplace.Sale",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+        ],
+        "name": "grantRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+        ],
+        "name": "hasRole",
+        "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "uint256", "name": "_price", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_auctioner", "type": "address" },
+            { "internalType": "address", "name": "_bidder", "type": "address" }
+        ],
+        "name": "placeBid",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+        ],
+        "name": "renounceRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+        ],
+        "name": "revokeRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+            { "internalType": "address", "name": "_nftContractAddress", "type": "address" },
+            { "internalType": "address", "name": "_auctioner", "type": "address" }
+        ],
+        "name": "settleAuction",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
+        "name": "supportsInterface",
+        "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    { "stateMutability": "payable", "type": "receive" }
+]
